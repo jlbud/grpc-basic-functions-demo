@@ -1,0 +1,19 @@
+syntax = "proto3";
+package proto;
+
+service DependServer {
+  rpc DependHello(DependRequest) returns (DependResponse) {}
+}
+
+message DependRequest{
+    string dependName = 1;
+}
+
+message DependResponse{
+    string dependMessage = 1;
+}
+
+message Bot{
+    string run = 1;
+    bytes say = 2;
+}
