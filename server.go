@@ -18,6 +18,11 @@ const (
 
 type server struct{}
 
+type Any struct {
+	Name string `json:"name"`
+	Age  int    `json:"age"`
+}
+
 func (s *server) Hello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloResponse, error) {
 	log.Printf("has request: %s call you", in.Name)
 	return &pb.HelloResponse{
