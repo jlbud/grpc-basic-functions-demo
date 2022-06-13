@@ -5,6 +5,7 @@ import (
 	"io"
 	"log"
 	"net"
+	"testing"
 
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
@@ -13,7 +14,7 @@ import (
 )
 
 const (
-	port = ":5050"
+	port = ":8001"
 )
 
 type server struct{}
@@ -48,7 +49,24 @@ func (s *server) DoubleStreamHello(stream pb.HelloWorld_DoubleStreamHelloServer)
 	}
 }
 
-func main() {
+func (s *server) ClientStreamHello(stream pb.HelloWorld_ClientStreamHelloServer) error {
+	for {
+		req, err := stream.Recv()
+		fmt.Println("server recv: ", req)
+		if err == io.EOF {
+			resp := pb.HelloStreamResponse{
+				Name: "client stream end",
+			}
+			if err := stream.SendAndClose(&resp); err != nil {
+				return err
+			}
+			break
+		}
+	}
+	return nil
+}
+
+func TestClientStreamServer(t *testing.T) {
 	lis, err := net.Listen("tcp", port)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)

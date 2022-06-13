@@ -1,13 +1,15 @@
 syntax = "proto3";
 
 package proto;
-option go_package = "proto/";
+//option go_package = "proto/";
 import "proto/depend.proto";
 
 service HelloWorld {
   rpc hello (HelloRequest) returns (HelloResponse) {}
-  // 双向流
+  // double stream
   rpc DoubleStreamHello (stream HelloStreamRequest) returns (stream HelloStreamResponse) {}
+  // client stream
+  rpc ClientStreamHello(stream HelloStreamRequest) returns(HelloStreamResponse);
 }
 
 message HelloRequest{
